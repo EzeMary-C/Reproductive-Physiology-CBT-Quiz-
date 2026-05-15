@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reproductive Physiology Quiz CBT by Eze Mary</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="exam-container">
+    <h2 id="welcome"></h2>
+    <p id="timer"></p>
+    <div id="question-container"></div>
+
+    <div class="nav-buttons">
+      <button id="prevBtn" onclick="prevQuestion()">Previous</button>
+      <button id="nextBtn" onclick="nextQuestion()">Next</button>
+      <button id="submitBtn" onclick="submitExam()">Submit</button>
+    </div>
+
+    <p id="result"></p>
+    <div id="review"></div>
+  </div>
+
+  <script>
+    const questions = [
+      { q: "Which of these is not a primary female sex hormone?", options: ["A. Estrogen", "B. Progesterone", "C. All of the above", "D. None of the above"], answer: "C" },
+      { q: "Which organ is responsible for the secretion of the female sex hormones?", options: ["A. Testes", "B. Fallopian tubes", "C. Ovary", "D. Oviduct"], answer: "C" },
+      { q: "The primary sex organ in female reproductive system is", options: ["A. Uterus", "B. Ovary", "C. Vagina", "D. Cervix"], answer: "B" },
+      { q: "Which of these is not an effect of estrogen in the vagina?", options: ["A. Decreases vaginal pH", "B. Changes vaginal epithelium", "C. Increases vaginal pH", "D. None of the above"], answer: "C" },
+      { q: "Which of these is not among the female secondary sexual characteristics?", options: ["A. Broadening of the hip", "B. High pitch voice", "C. Menarche", "D. Menopause"], answer: "D" },
+      { q: "Which hormone is responsible for increase in fat deposition around the buttocks and breast?", options: ["A. Progesterone", "B. Estrogen", "C. Prolactin", "D. FSH"], answer: "B" },
+      { q: "During puberty in a female, there is increase in hair distribution around the", options: ["A. Axila", "B. Pubis", "C. Scalp", "D. Body"], answer: "B" },
+      { q: "During labor, which hormone increases uterine contractility?", options: ["A. Progesterone", "B. FSH", "C. Oxytocin", "D. LH"], answer: "C" },
+      { q: "The name of the enzyme in the head of the sperm is called", options: ["A. Hyaluronidase", "B. Hyaluronidase", "C. Hycinthinidase", "D. Hyoluronidase"], answer: "A" },
+      { q: "During pregnancy, changes are noticed in these organs except:", options: ["A. Primary sex organs", "B. Accessory sex organs", "C. Mammary glands", "D. None of the above"], answer: "D" },
+      { q: "After 3 months of pregnancy, what is the nature of the corpus luteum?", options: ["A. Corpus luteum degenerates", "B. Corpus luteum regenerates", "C. Corpus luteum still secretes more progesterone", "D. None of the above"], answer: "A" },
+      { q: "Testosterone is synthesized from:", options: ["A. Triglycerides", "B. Cholesterol", "C. Proteins", "D. Glycoproteins"], answer: "B" },
+      { q: "The hormone responsible for the initiation of lactation is:", options: ["A. Estrogen", "B. Progesterone", "C. Prolactin", "D. Oxytocin"], answer: "C" },
+      { q: "The male accessory gland that produces a milky, alkaline secretion is:", options: ["A. Prostate gland", "B. Bulbourethral gland", "C. Seminal vesicle", "D. Epididymis"], answer: "A" },
+      { q: "The hormone that stimulates the contraction of the uterus during labor is:", options: ["A. Estrogen", "B. Progesterone", "C. Oxytocin", "D. Prolactin"], answer: "C" },
+      { q: "In males, the function of FSH is to:", options: ["A. Stimulate testosterone production", "B. Stimulate spermatogenesis", "C. Stimulate seminal fluid production", "D. Stimulate sperm motility"], answer: "B" },
+      { q: "The hormone responsible for male libido and sperm production is:", options: ["A. FSH", "B. LH", "C. Testosterone", "D. Inhibin"], answer: "C" },
+      { q: "Which of the following is NOT a function of the placenta?", options: ["A. Hormone secretion", "B. Nutrient and gas exchange", "C. Waste elimination", "D. Production of sperm"], answer: "D" },
+      { q: "During pregnancy, which hormone maintains the corpus luteum?", options: ["A. Progesterone", "B. Estrogen", "C. Human chorionic gonadotropin (hCG)", "D. LH"], answer: "C" },
+      { q: "Which hormone is responsible for milk ejection (let‑down reflex) during breastfeeding?", options: ["A. Estrogen", "B. Progesterone", "C. Oxytocin", "D. Prolactin"], answer: "C" }
+    ];
+
+    let current = 0;
+    let answers = new Array(questions.length).fill(null);
+    document.getElementById("welcome").innerText = "Welcome, " + localStorage.getItem("username");
+
+    function selectOption(letter) { answers[current] = letter; }
+
+    function showQuestion() {
+      const q = questions[current];
+      document.getElementById("question-container").innerHTML = `
+        <p><strong>Question ${current + 1}:</strong> ${q.q}</p>
+        ${q.options.map(opt => `
+          <div>
+            <input type='radio' name='option' onclick='selectOption("${opt.charAt(0)}")'
+              ${answers[current] === opt.charAt(0) ? "checked" : ""}>
+            ${opt}
+          </div>`).join("")}
+      `;
+    }
+
+    function nextQuestion() { if (current < questions.length - 1) current++; showQuestion(); }
+    function prevQuestion() { if (current > 0) current--; showQuestion(); }
+
+    function submitExam() {
+      let score = 0;
+      for (let i = 0; i < questions.length; i++) {
+        if (answers[i] === questions[i].answer) score++;
+      }
+      let feedback = score >= 15 ? "🌟 Excellent!" : score >= 10 ? "👍 Good job!" : "📘 Keep practicing.";
+      document.getElementById("result").innerHTML = `You scored ${score} out of ${questions.length}.<br>${feedback}`;
+      let reviewHTML = "<h3>Review:</h3>";
+      for (let i = 0; i < questions.length; i++) {
+        reviewHTML += `<p><strong>Q${i+1}:</strong> ${questions[i].q}<br>Your answer: ${answers[i] || "None"}<br>Correct answer: ${questions[i].answer}</p>`;
+      }
+      document.getElementById("review").innerHTML = reviewHTML;
+    }
+
+    // Timer setup (30 minutes = 1800 seconds)
+    let timeLeft = 1800;
+    let timerElement = document.getElement
