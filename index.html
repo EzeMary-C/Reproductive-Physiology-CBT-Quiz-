@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reproductive Physiology Quiz CBT by Eze Mary</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="login-container">
+    <h1>Welcome to Reproductive Physiology Quiz CBT</h1>
+    <h2>By</h2>
+    <h1 class="author">Eze Mary</h1>
+
+    <input type="text" id="username" placeholder="Enter your name">
+    <button id="startBtn" onclick="login()">Start Exam</button>
+  </div>
+
+  <script>
+    function login() {
+      const name = document.getElementById('username').value;
+      if (name.trim() !== "") {
+        localStorage.setItem("username", name);
+        window.location.href = "exam.html";
+      } else {
+        alert("Please enter your name to continue.");
+      }
+    }
+  </script>
+</body>
+</html>
