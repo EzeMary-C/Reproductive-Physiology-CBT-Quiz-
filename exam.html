@@ -82,4 +82,25 @@
 
     // Timer setup (30 minutes = 1800 seconds)
     let timeLeft = 1800;
-    let timerElement = document.getElement
+    let timerElement = document.getElementById("timer");
+
+    function updateTimer() {
+      let minutes = Math.floor(timeLeft / 60);
+      let seconds = timeLeft % 60;
+      timerElement.innerHTML = `⏳ Time Remaining: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        alert("Time is up! Submitting your exam...");
+        submitExam();
+      }
+      timeLeft--;
+    }
+
+    let timerInterval = setInterval(updateTimer, 1000);
+    updateTimer();
+
+    // Show the first question when the page loads
+    showQuestion();
+  </script>
+</body>
+</html>
